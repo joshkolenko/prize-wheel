@@ -4,11 +4,44 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Prize Wheel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.scss" />
   </head>
   <body>
-    <div id="wheel"></div>
+    <h1>Prize Wheel</h1>
+    <div class="wheel-container">
+      <div id="wheel"></div>
+    </div>
+    <button id="spin">Spin</button>
+    <!-- <button id="spin">Spin</button> -->
     <script src="index.js"></script>
+    <script>
+      const wheel = createWheel('#wheel', {
+        text: {
+          font: 'Inter',
+          style: 'bold',
+          color: 'white',
+        },
+        stroke: false,
+        segments: [
+          { fill: '#ffffff', text: 'Prize 1', color: 'black' },
+          { fill: '#1C5D99', text: 'Prize 2' },
+          { fill: '#639FAB', text: 'Prize 3' },
+          { fill: '#7286A0', text: 'Prize 3' },
+          { fill: '#BDFFFD', text: 'Prize 5', color: 'black' },
+          { fill: '#5E6973', text: 'Prize 6' },
+          { fill: '#074F57', text: 'Prize 7' },
+          { fill: '#85C7F2', text: 'Prize 8' },
+        ],
+      });
+
+      wheel.spin();
+    </script>
   </body>
 </html>
