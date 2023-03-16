@@ -4,7 +4,8 @@ function createWheel(el, options) {
   }
 
   options = {
-    centerPoint: false,
+    duration: 8000,
+    timing: 'ease',
     size: 100,
     scale: 3,
     ...options,
@@ -15,9 +16,9 @@ function createWheel(el, options) {
     },
     text: {
       color: 'black',
-      family: 'Arial, Helvetica, sans-serif',
+      font: 'Arial, Helvetica, sans-serif',
       offset: 15,
-      size: 16,
+      size: 20,
       style: 'normal',
       ...options.text,
     },
@@ -45,6 +46,15 @@ function createWheel(el, options) {
 
   el.append(canvas);
 
+  function cubicBezier(t, initial, p1, p2, final) {
+    return (
+      (1 - t) * (1 - t) * (1 - t) * initial +
+      3 * (1 - t) * (1 - t) * t * p1 +
+      3 * (1 - t) * t * t * p2 +
+      t * t * t * final
+    );
+  }
+
   function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180;
   }
@@ -57,16 +67,10 @@ function createWheel(el, options) {
       y: center.y + r * Math.sin(radians),
     };
   }
-  function drawCircle() {
-    context.lineWidth = strokeWidth;
-    context.strokeStyle = options.stroke.color;
 
-    context.beginPath();
-    context.arc(center.x, center.y, radius, 0, Math.PI * 2, true);
-    context.stroke();
-  }
+  function draw() {
+    context.clearRect(0, 0, width, height);
 
-  function drawSegments() {
     options.segments.forEach((segment, i) => {
       const length = 360 / options.segments.length;
 
@@ -103,7 +107,7 @@ function createWheel(el, options) {
 
         context.save();
 
-        context.font = `${options.text.style} ${textSize}px ${options.text.family}`;
+        context.font = `${options.text.style} ${textSize}px ${options.text.font}`;
         context.fillStyle = options.text.color;
 
         const textMetrics = context.measureText(segment.text);
@@ -119,6 +123,7 @@ function createWheel(el, options) {
           point.x - textWidth - textOffset,
           point.y + textHeight / 3
         );
+
         context.restore();
       }
 
@@ -127,19 +132,47 @@ function createWheel(el, options) {
     });
   }
 
-  drawCircle();
-  drawSegments();
+  function rotate(degrees) {
+    context.translate(center.x, center.y);
+    context.rotate(degreesToRadians(degrees));
+    context.translate(-center.x, -center.y);
+
+    draw();
+  }
+
+  async function spin() {
+    let frame;
+    let time = new Date();
+    const end = new Date(time.getTime() + 8000);
+
+    function animate() {
+      time = new Date();
+      const angle = ((2 * Math.PI) / 60) * time.getSeconds();
+
+      context.clearRect(0, 0, width, height);
+
+      rotate(angle);
+
+      frame = window.requestAnimationFrame(animate);
+    }
+
+    // animate();
+  }
+
+  draw();
 
   return {
     el,
+    canvas,
+    draw,
+    rotate,
+    spin,
+    degreesToRadians,
+    polarToCartesian,
   };
 }
 
 const wheel = createWheel('#wheel', {
-  text: {
-    size: 20,
-    offset: 15,
-  },
   segments: [
     { fill: 'blue', text: 'Prize 1' },
     { fill: 'red', text: 'Prize 2' },
@@ -151,3 +184,5 @@ const wheel = createWheel('#wheel', {
     { fill: 'purple', text: 'Prize 8' },
   ],
 });
+
+wheel.spin();
