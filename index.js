@@ -3,17 +3,22 @@ function createWheel(el, options) {
     el = document.querySelector(el);
   }
 
+  console.log(options.stroke);
+
   options = {
     duration: 8000,
     timing: 'ease',
     size: 100,
     scale: 3,
     ...options,
-    stroke: {
-      color: 'black',
-      width: 2,
-      ...options.stroke,
-    },
+    stroke:
+      options.stroke === false
+        ? false
+        : {
+            color: 'black',
+            width: 2,
+            ...options.stroke,
+          },
     text: {
       color: 'black',
       font: 'Arial, Helvetica, sans-serif',
@@ -23,6 +28,10 @@ function createWheel(el, options) {
       ...options.text,
     },
   };
+
+  if (options.stroke === false) {
+    options.stroke = { color: 'transparent', width: 0 };
+  }
 
   let width = el.clientWidth * options.scale;
   let height = el.clientHeight * options.scale;
@@ -84,6 +93,7 @@ function createWheel(el, options) {
       function drawSegmentShape() {
         context.fillStyle = segment.fill;
         context.lineWidth = strokeWidth;
+        context.strokeStyle = options.stroke.color;
 
         context.beginPath();
         context.arc(
@@ -98,6 +108,7 @@ function createWheel(el, options) {
         context.lineTo(point.x, point.y);
 
         context.fill();
+
         context.stroke();
       }
 
@@ -108,21 +119,15 @@ function createWheel(el, options) {
         context.save();
 
         context.font = `${options.text.style} ${textSize}px ${options.text.font}`;
-        context.fillStyle = options.text.color;
-
-        const textMetrics = context.measureText(segment.text);
-        const textHeight = textMetrics.fontBoundingBoxAscent;
-        const textWidth = textMetrics.width;
+        context.fillStyle = segment.color || options.text.color;
+        context.textBaseline = 'middle';
+        context.textAlign = 'right';
 
         context.translate(point.x, point.y);
         context.rotate(degreesToRadians(angle));
         context.translate(-point.x, -point.y);
 
-        context.fillText(
-          segment.text,
-          point.x - textWidth - textOffset,
-          point.y + textHeight / 3
-        );
+        context.fillText(segment.text, point.x - textOffset, point.y);
 
         context.restore();
       }
@@ -171,18 +176,3 @@ function createWheel(el, options) {
     polarToCartesian,
   };
 }
-
-const wheel = createWheel('#wheel', {
-  segments: [
-    { fill: 'blue', text: 'Prize 1' },
-    { fill: 'red', text: 'Prize 2' },
-    { fill: 'green', text: 'Prize 3' },
-    { fill: 'yellow', text: 'Prize 3' },
-    { fill: 'pink', text: 'Prize 5' },
-    { fill: 'gray', text: 'Prize 6' },
-    { fill: 'teal', text: 'Prize 7' },
-    { fill: 'purple', text: 'Prize 8' },
-  ],
-});
-
-wheel.spin();
