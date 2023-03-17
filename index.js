@@ -1,4 +1,4 @@
-function createWheel(el, options) {
+function createWheelJS(el, options) {
   if (typeof el === 'string') {
     el = document.querySelector(el);
   }
