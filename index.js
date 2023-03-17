@@ -27,6 +27,7 @@ function createWheel(el, options) {
       style: 'normal',
       ...options.text,
     },
+    threshold: 5,
   };
 
   if (options.stroke === false) {
@@ -66,15 +67,6 @@ function createWheel(el, options) {
 
   el.append(canvas);
 
-  function cubicBezier(t, initial, p1, p2, final) {
-    return (
-      (1 - t) * (1 - t) * (1 - t) * initial +
-      3 * (1 - t) * (1 - t) * t * p1 +
-      3 * (1 - t) * t * t * p2 +
-      t * t * t * final
-    );
-  }
-
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -113,13 +105,16 @@ function createWheel(el, options) {
     context.clearRect(0, 0, width, height);
 
     function drawImage() {
-      const image = new Image();
+      context.save();
 
-      image.src = options.image;
-      image.onload = () => {
-        console.log(image);
-        context.drawImage(image, 0, 0, width, height);
-      };
+      if (options.image.rotation) {
+        context.translate(center.x, center.y);
+        context.rotate(options.image.rotation);
+        context.translate(-center.x, -center.y);
+      }
+
+      context.drawImage(options.image.el, 0, 0, width, height);
+      context.restore();
     }
 
     options.segments = options.segments.map((segment, i) => {
@@ -193,6 +188,7 @@ function createWheel(el, options) {
         }
 
         drawSegmentShape();
+
         drawSegmentText();
       });
     }
@@ -212,6 +208,12 @@ function createWheel(el, options) {
     render();
   }
 
+  // Quintic easing out
+  // https://spicyyoghurt.com/tools/easing-functions
+  function ease(t, b, c, d) {
+    return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
+  }
+
   let isSpinning = false;
 
   async function spin() {
@@ -220,30 +222,34 @@ function createWheel(el, options) {
         return;
       }
 
-      let time = new Date(),
-        angle = 0;
-
+      const start = new Date();
       const result = getWeightedResult(options.segments);
-      const end =
-        (options.duration / 1000) * options.speed * 360 - result.angles.start;
+
+      let offset = (360 / options.segments.length - options.threshold) / 2;
+      offset *= Math.random();
+      offset *= Math.random() > 0.5 ? 1 : -1;
+
+      let final = (options.duration / 1000) * options.speed * 360 + offset;
+
+      if (options.counterclockwise) {
+        final += result.angles.start;
+        final *= -1;
+      } else {
+        final -= result.angles.start;
+      }
+
+      final = Math.floor(final);
 
       function animate() {
-        const delta = (new Date() - time) / 1000;
-        const change = options.speed * 360 * delta;
-
-        angle = options.counterclockwise ? angle - change : angle + change;
-        angle = Math.floor(angle);
-        time = new Date();
-
-        if (Math.abs(angle) >= Math.abs(end)) {
-          angle = end;
-        }
+        const now = new Date();
+        const time = now - start;
+        const angle = ease(time, 0, final, options.duration);
 
         context.save();
         rotate(angle);
         context.restore();
 
-        if (angle === end) {
+        if (time >= options.duration) {
           resolve(result);
           isSpinning = false;
           return;
@@ -256,6 +262,16 @@ function createWheel(el, options) {
 
       isSpinning = true;
     });
+  }
+
+  if (options.image) {
+    const image = new Image();
+    image.src = options.image.src;
+
+    options.image.el = image;
+    options.image.onload = () => {
+      render();
+    };
   }
 
   // Vertical starting position
