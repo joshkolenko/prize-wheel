@@ -3,6 +3,19 @@
 A configurable prize wheel library that is used to generate random results and spin a fancy wheel.
 </p>
 
+## Example
+
+---
+
+To use example, clone this repo, `cd` into the directory and run
+
+```bash
+npm i
+npm run dev
+```
+
+<br>
+
 ## Installation
 
 ---

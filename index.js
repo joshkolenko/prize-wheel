@@ -17,5 +17,5 @@ wheel.on('done', result => {
   console.log(result);
 });
 
-const spinBtn = document.querySelector('#spin') as HTMLElement;
+const spinBtn = document.querySelector('#spin');
 spinBtn.addEventListener('click', wheel.spin);
