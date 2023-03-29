@@ -14,6 +14,8 @@ npm i
 npm run dev
 ```
 
+The example uses `index.html`, `index.js` and `style.scss` in the repo root.
+
 <br>
 
 ---
@@ -153,6 +155,8 @@ Configuration object passed as the second argument in `createWheel`
     - **style?** (`number`) - Style of font. Example `bold`, `bold italic`, `normal`, `normal italic`, etc.
 - **threshold?** (`number`) - How far from the edge the segment can land on when spun.
 - **timeOffset?** - How far from the edge the segment can land on when spun.
+
+<br>
 
 ### **`PrizeWheel.Defaults`**
 
