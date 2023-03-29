@@ -1,17 +1,28 @@
 {
-  "name": "spin-to-win",
+  "name": "prize-wheel",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npm run build:esm && npm run build:cjs && npm run build:web && npm run build:web:min && npm run build:types",
+    "build:esm": "esbuild src/index.ts --format=esm --outfile=dist/esm/index.js && echo '{ \"type\": \"module\" }' > dist/esm/package.json",
+    "build:cjs": "esbuild src/index.ts --format=cjs --outfile=dist/cjs/index.js && echo '{ \"type\": \"commonjs\" }' > dist/cjs/package.json",
+    "build:web": "esbuild src/index.ts --format=iife --outfile=dist/web/prize-wheel.js --target=es6",
+    "build:web:min": "esbuild src/index.ts --format=iife --outfile=dist/web/prize-wheel.min.js --target=es2016 --minify",
+    "build:types": "cp types/index.d.ts dist/cjs && cp types/index.d.ts dist/esm && cp types/index.d.ts dist/web/prize-wheel.d.ts",
+    "doc": "typedoc --options typedoc.json"
   },
   "devDependencies": {
+    "esbuild": "^0.17.12",
+    "sass": "^1.59.3",
+    "typedoc": "^0.23.28",
     "vite": "^4.1.0"
   },
-  "dependencies": {
-    "sass": "^1.59.3"
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
   }
 }
