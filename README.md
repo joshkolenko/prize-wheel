@@ -3,9 +3,9 @@
 A configurable prize wheel library that is used to generate random results and spin a fancy wheel.
 </p>
 
-## Example
-
 ---
+
+## Example
 
 To use example, clone this repo, `cd` into the directory and run
 
@@ -16,9 +16,9 @@ npm run dev
 
 <br>
 
-## Installation
-
 ---
+
+## Installation
 
 Add an element to your html where you'd like the wheel `canvas` element appended (and maybe a button to spin it).<br>
 _Note: The width and height of the element is used to calculate the width and height of the `canvas`_
@@ -44,9 +44,9 @@ or include it in your html (`dist/web`).
 
 <br>
 
-## Usage
-
 ---
+
+## Usage
 
 Initialize the prize wheel by calling `createWheel`. Returns `PrizeWheel.Instance`.
 
@@ -90,9 +90,9 @@ That's it! That's of course bare minimum so you may want to see the `PrizeWheel.
 
 <br>
 
-## API
-
 ---
+
+## API
 
 ### **`createWheel`** (function)
 
