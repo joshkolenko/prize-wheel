@@ -2,20 +2,15 @@
 import { createWheel } from './src/index.js';
 
 const wheel = createWheel('#wheel', {
-  duration: 6000,
-  timeOffset: 1000,
-  speed: 1,
   segments: [
-    { fill: '#ffffff', text: 'Segment 1', weight: 10, color: 'black' },
-    { fill: '#1C5D99', text: 'Segment 2', weight: 10 },
-    { fill: '#BDFFFD', text: 'Segment 3', weight: 10, color: 'black' },
-    { fill: '#7286A0', text: 'Segment 4', weight: 10 },
-    { fill: '#BDEAFD', text: 'Segment 5', weight: 10, color: 'black' },
-    { fill: '#1C5D69', text: 'Segment 6', weight: 10 },
+    { weight: 10, fill: 'purple', text: 'Segment 1', color: 'pink' },
+    { weight: 10, fill: 'pink', text: 'Segment 2', color: 'purple' },
+    { weight: 10, fill: 'purple', text: 'Segment 3', color: 'pink' },
+    { weight: 10, fill: 'pink', text: 'Segment 4', color: 'purple' },
+    { weight: 10, fill: 'purple', text: 'Segment 5', color: 'pink' },
+    { weight: 10, fill: 'pink', text: 'Segment 6', color: 'purple' },
   ],
-  text: {
-    size: 16,
-  },
+  stroke: false,
 });
 
 wheel.on('done', result => {

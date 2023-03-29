@@ -20,7 +20,7 @@ h1 {
   font-weight: bold;
   letter-spacing: -0.025em;
   margin: 0 0 1em;
-  color: #efefef;
+  color: white;
 }
 
 .wheel-container {
@@ -48,7 +48,7 @@ h1 {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    border-top: 2em solid #cccccc;
+    border-top: 2em solid white;
     border-left: 2em solid transparent;
     border-right: 2em solid transparent;
     filter: drop-shadow(0 0 0.2em rgba(black, 25%));
@@ -60,13 +60,13 @@ h1 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #074f57;
+  color: pink;
   padding: 1.2em 0;
   border: none;
   border-radius: 0.2em;
   width: 100%;
   margin-top: 5em;
-  background: #85c7f2;
+  background: purple;
   cursor: pointer;
 }
 
